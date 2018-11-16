@@ -9,7 +9,7 @@ import java.util.Random;
 
 
 
-public class Block implements Serializable{
+class Block implements Serializable{
 
     private String prevHash;
     private String hash;
@@ -42,31 +42,43 @@ public class Block implements Serializable{
         this.timeStamp = new Date().getTime();
     }
 
-    private void setMagicNumber() {
+    public synchronized void printOutResults(){
+        System.out.println("Id: " + this.getId());
+        System.out.println("Timestamp: " + this.getTimeStamp());
+        System.out.println("Magic number: " + this.getMagicNumber());
+        System.out.println("Hash of the previous block:");
+        System.out.println(this.getPrevHash());
+        System.out.println("Hash of the block:");
+        System.out.println(this.getHash());
+        System.out.println("Block was generating for " + this.getTimeSpent() + " seconds");
+    }
+
+
+    private synchronized void setMagicNumber() {
         this.magicNumber = new Random().nextInt(Integer.MAX_VALUE);
     }
 
-    public int getId() {
+    public synchronized int getId() {
         return id;
     }
 
-    public String getHash() {
+    public synchronized String getHash() {
         return hash;
     }
 
-    public String getPrevHash() {
+    public synchronized String getPrevHash() {
         return prevHash;
     }
 
-    public long getTimeStamp(){
+    public synchronized long getTimeStamp(){
         return timeStamp;
     }
 
-    public int getTimeSpent() {
+    public synchronized int getTimeSpent() {
         return timeSpent;
     }
 
-    public String applySha256(String input){
+    public synchronized String applySha256(String input){
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             /* Applies sha256 to our input */
@@ -84,7 +96,7 @@ public class Block implements Serializable{
         }
     }
 
-    public int getMagicNumber(){
+    public synchronized int getMagicNumber(){
         return this.magicNumber;
     }
 }
