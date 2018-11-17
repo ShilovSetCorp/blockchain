@@ -18,7 +18,7 @@ class Blockchain {
 
     }
 
-    public synchronized void readBlockchainFromFile(File file) {
+    public void readBlockchainFromFile(File file) {
         try {
             newFile = file.createNewFile();
             if (newFile) {
@@ -31,6 +31,7 @@ class Blockchain {
                 this.blockchain = (LinkedList<Block>) ois.readObject();
                 System.out.println("The Blockchain was read from the file");
                 ois.close();
+                fis.close();
                 this.difficulty = getDifficultyFromFile(this.blockchain.peekLast().getHash());
             }
         } catch (IOException e) {
@@ -40,13 +41,14 @@ class Blockchain {
         }
     }
 
-    public synchronized void writeBlockchainToFile(String filePath) {
+    public void writeBlockchainToFile(String filePath) {
         File file = new File(filePath);
         try {
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(blockchain);
             oos.close();
+            fos.close();
             System.out.println("The Blockchain was successfully written to the file");
             System.out.println("");
         } catch (FileNotFoundException e) {
@@ -56,7 +58,7 @@ class Blockchain {
         }
     }
 
-    public synchronized void setDifficulty() {
+    public void setDifficulty() {
         Block b = this.blockchain.peekLast();
         if (b == null) {
             this.difficulty = 0;

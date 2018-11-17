@@ -54,31 +54,31 @@ class Block implements Serializable{
     }
 
 
-    private synchronized void setMagicNumber() {
+    private void setMagicNumber() {
         this.magicNumber = new Random().nextInt(Integer.MAX_VALUE);
     }
 
-    public synchronized int getId() {
+    public int getId() {
         return id;
     }
 
-    public synchronized String getHash() {
+    public String getHash() {
         return hash;
     }
 
-    public synchronized String getPrevHash() {
+    public String getPrevHash() {
         return prevHash;
     }
 
-    public synchronized long getTimeStamp(){
+    public long getTimeStamp(){
         return timeStamp;
     }
 
-    public synchronized int getTimeSpent() {
+    public int getTimeSpent() {
         return timeSpent;
     }
 
-    public synchronized String applySha256(String input){
+    public String applySha256(String input){
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             /* Applies sha256 to our input */
@@ -96,7 +96,7 @@ class Block implements Serializable{
         }
     }
 
-    public synchronized int getMagicNumber(){
+    public int getMagicNumber(){
         return this.magicNumber;
     }
 }
