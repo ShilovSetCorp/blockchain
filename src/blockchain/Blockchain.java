@@ -8,11 +8,12 @@ import java.util.List;
  * Created by Пользователь on 16.11.2018.
  */
 class Blockchain {
-    private LinkedList<String> messages = new LinkedList<String>();
+    private LinkedList<Message> messages = new LinkedList<Message>();
     private volatile LinkedList<Block> blockchain = null;
     private boolean newFile = false;
     private int timeSpent;
     private int difficulty = 0;
+    private static long ids = 1;
 
 
     public Blockchain(String filePath) {
@@ -28,6 +29,7 @@ class Blockchain {
                 System.out.println("The new blockchain file was successfully created.");
                 this.blockchain = new LinkedList<Block>();
                 this.difficulty = 0;
+                this.ids = 1;
             } else {
                 FileInputStream fis = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fis);
@@ -35,6 +37,9 @@ class Blockchain {
                 System.out.println("The Blockchain was read from the file");
                 ois.close();
                 fis.close();
+                if(blockchain.peekLast().getMessageStack().peekLast() != null) {
+                    this.ids = blockchain.peekLast().getMessageStack().peekLast().getId() + 1L;
+                }
                 this.difficulty = getDifficultyFromFile(this.blockchain.peekLast().getHash());
             }
         } catch (IOException e) {
@@ -111,6 +116,15 @@ class Blockchain {
                     cnt++;
                 }
             }
+            //check that every message has an identifier greater than the maximum identifier of the previous block
+            for(int i = this.blockchain.size() - 1; i > 0; i--){
+                for(int j = 0; j < this.blockchain.get(i).getMessageStack().size(); j++) {
+                    if (!(this.blockchain.get(i-1).getMaxMsgID() < this.blockchain.get(i).getMessageStack().get(j).getId()))
+                    {
+                        cnt++;
+                    }
+                }
+            }
         }
         return cnt == 0;
     }
@@ -123,8 +137,17 @@ class Blockchain {
         return i;
     }
 
-    public synchronized void addMessagesToTheBlockchain(String msg){
-        this.messages.add(msg);
+    public synchronized void addMessagesToTheBlockchain(Message msg) throws Exception {
+        if(msg.getId() < this.ids) {
+            if(msg.verifySignature(msg.getList().get(0),msg.getList().get(1))) {
+                this.messages.add(msg);
+            }
+            else {
+                System.out.println("Signature is wrong");
+            }
+        }else{
+            System.out.println("Messaage rejected");
+        }
     }
 
     public synchronized void addMessagesToTheBlock(){
@@ -135,10 +158,14 @@ class Blockchain {
     public void setTimeSpent(int timeSpent){
         this.timeSpent = timeSpent;
     }
+
     public int getTimeSpent() {
         return timeSpent;
     }
 
+    public long setMsgID(){
+        return ids++;
+    }
 
 
 }

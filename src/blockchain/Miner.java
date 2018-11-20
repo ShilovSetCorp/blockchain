@@ -1,6 +1,7 @@
 package blockchain;
 
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalTime;
 
 /**
@@ -25,7 +26,11 @@ public class Miner extends Thread {
         System.out.println("");
         System.out.println("Block:");
         System.out.println("Created by miner # " + this.minerNumber);
-        Main.blockchain.getBlockchain().peekLast().printOutResults();
+        try {
+            Main.blockchain.getBlockchain().peekLast().printOutResults();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         System.out.println("Block was generating for " + Main.blockchain.getTimeSpent() + " seconds");
         Main.blockchain.setDifficulty();
     }

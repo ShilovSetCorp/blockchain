@@ -9,7 +9,7 @@ import java.util.Scanner;
  */
 public class User extends Thread {
     private String name;
-    private String message;
+    private Message message;
     Scanner in = new Scanner(System.in);
 
     public User(String name){
@@ -20,7 +20,11 @@ public class User extends Thread {
     public void run() {
         while (!this.isInterrupted()) {
             newMaessage();
-            Main.blockchain.addMessagesToTheBlockchain(getMessage());
+            try {
+                Main.blockchain.addMessagesToTheBlockchain(getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -28,13 +32,18 @@ public class User extends Thread {
         if(!this.isInterrupted()) {
             synchronized (User.class) {
                 System.out.print(this.name + ": ");
-                String s = in.nextLine();
-                this.message = this.name + ": " + s;
+                String data = in.nextLine();
+                data = this.name + ": " + data;
+                try {
+                    this.message = new Message(data,Main.blockchain.setMsgID());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    public String getMessage(){
+    public Message getMessage(){
         return this.message;
     }
 

@@ -1,6 +1,7 @@
 package blockchain;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalTime;
 
 import java.security.MessageDigest;
@@ -13,12 +14,13 @@ import java.util.Random;
 
 class Block implements Serializable{
 
-    private List<String> messagesStack = new LinkedList<String>();
+    private List<Message> messagesStack = new LinkedList<Message>();
     private String prevHash;
     private String hash;
     private int id;
     private long timeStamp;
     private int magicNumber;
+    private long maxMsgID;
 
     public Block(Block prevBlock, int difficulty){
 
@@ -43,7 +45,7 @@ class Block implements Serializable{
         this.timeStamp = new Date().getTime();
     }
 
-    public void printOutResults() {
+    public void printOutResults() throws UnsupportedEncodingException {
         System.out.println("Id: " + this.getId());
         System.out.println("Timestamp: " + this.getTimeStamp());
         System.out.println("Magic number: " + this.getMagicNumber());
@@ -55,8 +57,10 @@ class Block implements Serializable{
             System.out.println("Block data: no messages");
         }else{
             System.out.println("Block data: ");
-            for(String s: messagesStack) {
-                System.out.println(s);
+            for(Message s: messagesStack) {
+                String str = new String(s.getList().get(0), "UTF-8");
+
+                System.out.println(str);
             }
         }
     }
@@ -105,8 +109,26 @@ class Block implements Serializable{
         return this.magicNumber;
     }
 
-    public void writeMessagesStack(LinkedList<String> messagesStack){
+    public void writeMessagesStack(LinkedList<Message> messagesStack){
         this.messagesStack.addAll(messagesStack);
+    }
+
+    public LinkedList<Message> getMessageStack(){
+        return (LinkedList<Message>) this.messagesStack;
+    }
+
+    private void setMaxMsgID(){
+        long max = 0;
+        for(int i = 0; i < this.messagesStack.size(); i++){
+            if(max < this.messagesStack.get(i).getId()){
+                max = this.messagesStack.get(i).getId();
+            }
+        }
+        this.maxMsgID = max;
+    }
+
+    public long getMaxMsgID(){
+        return this.maxMsgID;
     }
 
 }
