@@ -11,6 +11,7 @@ public class User extends Thread {
     private String name;
     private Message message;
     Scanner in = new Scanner(System.in);
+    private int VC = 100;
 
     public User(String name){
         this.name = name;
@@ -45,6 +46,22 @@ public class User extends Thread {
 
     public Message getMessage(){
         return this.message;
+    }
+
+    public void addVC(int add){
+        this.VC += add;
+    }
+
+    public void sendVC(int sub){
+        if(this.VC < sub){
+            System.out.println("Not enough VC, send transaction suspend");
+        }else{
+            this.VC -= sub;
+        }
+    }
+
+    public int getVC() {
+        return this.VC;
     }
 
 }
