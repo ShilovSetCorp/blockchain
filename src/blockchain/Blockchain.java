@@ -2,11 +2,13 @@ package blockchain;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Пользователь on 16.11.2018.
  */
 class Blockchain {
+    private LinkedList<String> messages = new LinkedList<String>();
     private volatile LinkedList<Block> blockchain = null;
     private boolean newFile = false;
     private int difficulty = 0;
@@ -119,5 +121,15 @@ class Blockchain {
         }
         return i;
     }
+
+    public synchronized void addMessagesToTheBlockchain(String msg){
+        this.messages.add(msg);
+    }
+
+    public synchronized void addMessagesToTheBlock(){
+        this.blockchain.peekLast().writeMessagesStack(this.messages);
+        this.messages.clear();
+    }
+
 
 }

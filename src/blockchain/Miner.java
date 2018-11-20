@@ -1,6 +1,5 @@
 package blockchain;
 
-import java.util.LinkedList;
 
 /**
  * Created by Пользователь on 16.11.2018.
@@ -19,6 +18,7 @@ public class Miner extends Thread{
         synchronized (Block.class) {
             boolean blockIsValid = Main.blockchain.addBlock(new Block(Main.blockchain.getBlockchain().peekLast(), Main.blockchain.getDifficulty()));
             if (blockIsValid) {
+                Main.blockchain.addMessagesToTheBlock();
                 System.out.println("");
                 System.out.println("Block:");
                 System.out.println("Created by miner # " + this.minerNumber);

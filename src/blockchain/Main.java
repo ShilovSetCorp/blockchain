@@ -7,26 +7,41 @@ import java.util.Scanner;
 
 public class Main {
     public static Blockchain blockchain;
+    public static List<Thread> users = new ArrayList<Thread>();
+    public static List<Thread> miners = new ArrayList<Thread>();
+
     public static void main(String[] args) throws InterruptedException {
         Scanner in = new Scanner(System.in);
         String filePath = in.nextLine();//"D:\\hyperskillGit\\blockchain\\MyBlockchain";
-        blockchain= new Blockchain(filePath);
-        List<Thread> miners = new ArrayList<>();
+        blockchain = new Blockchain(filePath);
 
-        if(blockchain.isBlockchainValid()) {
-            for (int i = 0; i < 8; i++) {
-                miners.add(new Miner(i+1));
+
+
+        if (blockchain.isBlockchainValid()) {
+            users.add(new User("Tom"));
+            users.add(new User("Sara"));
+            users.add(new User("John"));
+
+            for (int i = 0; i < 7; i++) {
+                miners.add(new Miner(i + 1));
             }
-            for (Thread miner: miners){
+            for (Thread miner : miners) {
                 miner.start();
             }
-            for (Thread miner: miners){
+
+            users.forEach(Thread::start);
+            for (Thread miner : miners) {
                 miner.join();
             }
+            for(Thread user:users){
+                user.interrupt();
+            }
             blockchain.writeBlockchainToFile(filePath);
-        }
-        else {
+            System.exit(0);
+
+        } else {
             System.out.println("Blockchain loaded from file is not valid.");
         }
+
     }
 }

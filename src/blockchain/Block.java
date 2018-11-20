@@ -5,12 +5,15 @@ import java.time.LocalTime;
 
 import java.security.MessageDigest;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 
 
 class Block implements Serializable{
 
+    private List<String> messagesStack = new LinkedList<String>();
     private String prevHash;
     private String hash;
     private int id;
@@ -18,15 +21,15 @@ class Block implements Serializable{
     private int magicNumber;
     private int timeSpent;
 
-    public Block(Block prevblock, int difficulty){
+    public Block(Block prevBlock, int difficulty){
         LocalTime start = LocalTime.now();
-        if(prevblock == null) {
+        if(prevBlock == null) {
             this.prevHash = "0";
             this.id = 1;
         }
         else {
-            this.prevHash = prevblock.getHash();
-            this.id = prevblock.getId() + 1;
+            this.prevHash = prevBlock.getHash();
+            this.id = prevBlock.getId() + 1;
         }
         String zeros = "";
         for (int i = 0; i < difficulty; i++){
@@ -42,7 +45,7 @@ class Block implements Serializable{
         this.timeStamp = new Date().getTime();
     }
 
-    public synchronized void printOutResults(){
+    public synchronized void printOutResults() {
         System.out.println("Id: " + this.getId());
         System.out.println("Timestamp: " + this.getTimeStamp());
         System.out.println("Magic number: " + this.getMagicNumber());
@@ -50,6 +53,14 @@ class Block implements Serializable{
         System.out.println(this.getPrevHash());
         System.out.println("Hash of the block:");
         System.out.println(this.getHash());
+        if (this.id == 1 || messagesStack.isEmpty()){
+            System.out.println("Block data: no messages");
+        }else{
+            System.out.println("Block data: ");
+            for(String s: messagesStack) {
+                System.out.println(s);
+            }
+        }
         System.out.println("Block was generating for " + this.getTimeSpent() + " seconds");
     }
 
@@ -99,4 +110,9 @@ class Block implements Serializable{
     public int getMagicNumber(){
         return this.magicNumber;
     }
+
+    public void writeMessagesStack(LinkedList<String> messagesStack){
+        this.messagesStack.addAll(messagesStack);
+    }
+
 }
