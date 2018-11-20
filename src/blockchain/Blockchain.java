@@ -11,6 +11,7 @@ class Blockchain {
     private LinkedList<String> messages = new LinkedList<String>();
     private volatile LinkedList<Block> blockchain = null;
     private boolean newFile = false;
+    private int timeSpent;
     private int difficulty = 0;
 
 
@@ -65,10 +66,10 @@ class Blockchain {
         if (b == null) {
             this.difficulty = 0;
         } else {
-            if (b.getTimeSpent() < 10) {
+            if (getTimeSpent() < 10) {
                 this.difficulty += 1;
                 System.out.println("N was increased to " + this.difficulty);
-            } else if (b.getTimeSpent() >= 60) {
+            } else if (getTimeSpent() >= 60) {
                 this.difficulty -= 1;
                 System.out.println("N was decreased to " + this.difficulty);
             } else {
@@ -130,6 +131,14 @@ class Blockchain {
         this.blockchain.peekLast().writeMessagesStack(this.messages);
         this.messages.clear();
     }
+
+    public void setTimeSpent(int timeSpent){
+        this.timeSpent = timeSpent;
+    }
+    public int getTimeSpent() {
+        return timeSpent;
+    }
+
 
 
 }

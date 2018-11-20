@@ -19,10 +19,9 @@ class Block implements Serializable{
     private int id;
     private long timeStamp;
     private int magicNumber;
-    private int timeSpent;
 
     public Block(Block prevBlock, int difficulty){
-        LocalTime start = LocalTime.now();
+
         if(prevBlock == null) {
             this.prevHash = "0";
             this.id = 1;
@@ -40,12 +39,11 @@ class Block implements Serializable{
             setMagicNumber();
             this.hash = applySha256(this.prevHash + this.magicNumber);
         }while(!this.hash.startsWith(zeros));
-        LocalTime finish = LocalTime.now();
-        this.timeSpent = finish.toSecondOfDay() - start.toSecondOfDay();
+
         this.timeStamp = new Date().getTime();
     }
 
-    public synchronized void printOutResults() {
+    public void printOutResults() {
         System.out.println("Id: " + this.getId());
         System.out.println("Timestamp: " + this.getTimeStamp());
         System.out.println("Magic number: " + this.getMagicNumber());
@@ -61,7 +59,6 @@ class Block implements Serializable{
                 System.out.println(s);
             }
         }
-        System.out.println("Block was generating for " + this.getTimeSpent() + " seconds");
     }
 
 
@@ -85,9 +82,6 @@ class Block implements Serializable{
         return timeStamp;
     }
 
-    public int getTimeSpent() {
-        return timeSpent;
-    }
 
     public String applySha256(String input){
         try {

@@ -26,9 +26,11 @@ public class User extends Thread {
 
     private synchronized void newMaessage(){
         if(!this.isInterrupted()) {
-
-            String s = in.nextLine();
-            this.message = this.name + ": " + s;
+            synchronized (User.class) {
+                System.out.print(this.name + ": ");
+                String s = in.nextLine();
+                this.message = this.name + ": " + s;
+            }
         }
     }
 
