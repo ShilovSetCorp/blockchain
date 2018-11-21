@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class Main {
     public static Blockchain blockchain;
-    public static List<Thread> users = new ArrayList<Thread>();
-    public static List<Thread> miners = new ArrayList<Thread>();
+    public static List<Thread> users = new ArrayList<>();
+    public static List<Thread> miners = new ArrayList<>();
     public static GenerateKeys gk;
 
 
@@ -30,17 +30,14 @@ public class Main {
             for (int i = 0; i < 7; i++) {
                 miners.add(new Miner(i + 1));
             }
-            for (Thread miner : miners) {
-                miner.start();
-            }
+            miners.forEach(Thread::start);
 
             users.forEach(Thread::start);
+
             for (Thread miner : miners) {
                 miner.join();
             }
-            for(Thread user:users){
-                user.interrupt();
-            }
+
             blockchain.writeBlockchainToFile(filePath);
             System.exit(0);
 

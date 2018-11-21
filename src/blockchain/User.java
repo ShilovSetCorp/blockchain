@@ -1,13 +1,10 @@
 package blockchain;
 
-import java.io.InputStream;
-import java.nio.channels.Channels;
+
 import java.util.Scanner;
 
-/**
- * Created by Пользователь on 19.11.2018.
- */
-public class User extends Thread {
+
+class User extends Thread {
     private String name;
     private Message message;
     Scanner in = new Scanner(System.in);

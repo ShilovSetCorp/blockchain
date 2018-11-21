@@ -2,13 +2,10 @@ package blockchain;
 
 import java.io.*;
 import java.util.LinkedList;
-import java.util.List;
 
-/**
- * Created by Пользователь on 16.11.2018.
- */
+
 class Blockchain {
-    private LinkedList<Message> messages = new LinkedList<Message>();
+    private LinkedList<Message> messages = new LinkedList<>();
     private volatile LinkedList<Block> blockchain = null;
     private boolean newFile = false;
     private int timeSpent;
@@ -19,7 +16,6 @@ class Blockchain {
     public Blockchain(String filePath) {
         File file = new File(filePath);//"D:\\hyperskillGit\\blockchain\\MyBlockchain");
         readBlockchainFromFile(file);
-
     }
 
     public void readBlockchainFromFile(File file) {
@@ -27,9 +23,9 @@ class Blockchain {
             newFile = file.createNewFile();
             if (newFile) {
                 System.out.println("The new blockchain file was successfully created.");
-                this.blockchain = new LinkedList<Block>();
+                this.blockchain = new LinkedList<>();
                 this.difficulty = 0;
-                this.ids = 1;
+                Blockchain.ids = 1;
             } else {
                 FileInputStream fis = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fis);
@@ -38,7 +34,7 @@ class Blockchain {
                 ois.close();
                 fis.close();
                 if(blockchain.peekLast().getMessageStack().peekLast() != null) {
-                    this.ids = blockchain.peekLast().getMessageStack().peekLast().getId() + 1L;
+                    Blockchain.ids = blockchain.peekLast().getMessageStack().peekLast().getId() + 1L;
                 }
                 this.difficulty = getDifficultyFromFile(this.blockchain.peekLast().getHash());
             }
@@ -137,8 +133,8 @@ class Blockchain {
         return i;
     }
 
-    public synchronized void addMessagesToTheBlockchain(Message msg) throws Exception {
-        if(msg.getId() < this.ids) {
+    public void addMessagesToTheBlockchain(Message msg) throws Exception {
+        if(msg.getId() < Blockchain.ids) {
             if(msg.verifySignature(msg.getList().get(0),msg.getList().get(1))) {
                 this.messages.add(msg);
             }
@@ -150,7 +146,7 @@ class Blockchain {
         }
     }
 
-    public synchronized void addMessagesToTheBlock(){
+    public void addMessagesToTheBlock(){
         this.blockchain.peekLast().writeMessagesStack(this.messages);
         this.messages.clear();
     }

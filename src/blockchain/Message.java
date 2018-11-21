@@ -1,22 +1,19 @@
 package blockchain;
 
-import javax.management.openmbean.InvalidKeyException;
 import java.io.Serializable;
 import java.security.Signature;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Пользователь on 20.11.2018.
- */
-public class Message implements Serializable{
+
+class Message implements Serializable{
     private List<byte[]> list;
     private long id;
 
     //The constructor of Message class builds the list that will be written to the file.
     //The list consists of the message and the signature.
     public Message(String data, long id) throws Exception {
-        list = new ArrayList<byte[]>();
+        list = new ArrayList<>();
         list.add(data.getBytes());
         list.add(sign(data));
         this.id = id;

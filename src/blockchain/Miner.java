@@ -4,10 +4,7 @@ package blockchain;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalTime;
 
-/**
- * Created by Пользователь on 16.11.2018.
- */
-public class Miner extends Thread {
+class Miner extends Thread {
     private int minerNumber;
     private int VC = 0;
 

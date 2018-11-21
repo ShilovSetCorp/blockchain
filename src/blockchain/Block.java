@@ -2,8 +2,6 @@ package blockchain;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalTime;
-
 import java.security.MessageDigest;
 import java.util.Date;
 import java.util.LinkedList;
@@ -14,7 +12,7 @@ import java.util.Random;
 
 class Block implements Serializable{
 
-    private List<Message> messagesStack = new LinkedList<Message>();
+    private List<Message> messagesStack = new LinkedList<>();
     private String prevHash;
     private String hash;
     private int id;
@@ -41,7 +39,7 @@ class Block implements Serializable{
             setMagicNumber();
             this.hash = applySha256(this.prevHash + this.magicNumber);
         }while(!this.hash.startsWith(zeros));
-
+        setMaxMsgID();
         this.timeStamp = new Date().getTime();
     }
 
@@ -119,9 +117,9 @@ class Block implements Serializable{
 
     private void setMaxMsgID(){
         long max = 0;
-        for(int i = 0; i < this.messagesStack.size(); i++){
-            if(max < this.messagesStack.get(i).getId()){
-                max = this.messagesStack.get(i).getId();
+        for (Message aMessagesStack : this.messagesStack) {
+            if (max < aMessagesStack.getId()) {
+                max = aMessagesStack.getId();
             }
         }
         this.maxMsgID = max;
